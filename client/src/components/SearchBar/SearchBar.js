@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import instance from '../../axios';
 import Suggestions from './Suggestions/Suggestions';
 
 import "./SearchBar.css";
@@ -49,7 +50,7 @@ export default function SearchBar(props) {
             if (q === '') {
                 setSuggestions([]);
             } else {
-                axios.post( '/api/suggest', body)
+                instance.post( '/api/suggest', body)
                 .then(response => {
                     console.log(JSON.stringify(response.data))
                     setSuggestions(response.data.suggestions);
