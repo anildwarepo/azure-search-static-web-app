@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import instance from '../../axios';
 import CircularProgress  from '@mui/material/CircularProgress';
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -37,7 +38,7 @@ export default function Search() {
       filters: filters
     };
 
-    axios.post( '/api/search', body)
+    instance.post( '/api/search', body)
       .then(response => {
             console.log(JSON.stringify(response.data))
             setResults(response.data.results);
