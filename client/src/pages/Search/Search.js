@@ -45,6 +45,20 @@ export default function Search() {
             setFacets(response.data.facets);
             setResultCount(response.data.count);
             setIsLoading(false);
+
+            //Telemetry using AppInsights
+            const searchId = response.headers['x-ms-azs-searchid'];
+            if (searchId && window.appInsights) {
+              window.appInsights.trackEvent("Search", {
+                SearchServiceName: "aisearch-c2u66zp7iicfc",
+                SearchId: searchId,
+                IndexName: "aml_index_with_suggester",    // Replace with actual index name
+                QueryTerms: q,                 // Using the q state variable here
+                ResultCount: response.data.count,
+                //ScoringProfile: "YourScoringProfile" // Replace with actual scoring profile
+              });
+            }
+
         } )
         .catch(error => {
             console.log(error);

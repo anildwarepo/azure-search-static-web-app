@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
-import axios from 'axios';
+//import axios from 'axios';
+import instance from '../../axios';
 
 import "./Details.css";
 
@@ -16,7 +17,7 @@ export default function Details() {
   useEffect(() => {
     setIsLoading(true);
     // console.log(id);
-    axios.get('/api/lookup?id=' + id)
+    instance.get('/api/lookup?id=' + id)
       .then(response => {
         console.log(JSON.stringify(response.data))
         const doc = response.data.document;
@@ -41,12 +42,9 @@ export default function Details() {
       resultStyle += " active";
       detailsBody = (
         <div className="card-body">
-          <h5 className="card-title">{document.original_title}</h5>
-          <img className="image" src={document.image_url} alt="Book cover"></img>
-          <p className="card-text">{document.authors?.join('; ')} - {document.original_publication_year}</p>
-          <p className="card-text">ISBN {document.isbn}</p>
-          <Rating name="half-rating-read" value={parseInt(document.average_rating)} precision={0.1} readOnly></Rating>
-          <p className="card-text">{document.ratings_count} Ratings</p>
+          <h5 className="card-title">{document.title}</h5>
+          <p className="card-text">{document.content}</p>
+          <p className="card-text">{document.tags} Ratings</p>
         </div>
       );
     }
@@ -55,18 +53,21 @@ export default function Details() {
     else {
       rawStyle += " active";
       detailsBody = (
-        <div className="card-body text-left">
-          <pre><code>
-            {JSON.stringify(document, null, 2)}
-          </code></pre>
+        <div style={{ overflow: 'auto', maxHeight: '400px', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+          <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+            <code>
+              {JSON.stringify(document, null, 2)}
+            </code>
+          </pre>
         </div>
       );
+      
     }
   }
 
   return (
     <main className="main main--details container fluid">
-      <div className="card text-center result-container">
+      <div className="card result-container">
         <div className="card-header">
           <ul className="nav nav-tabs card-header-tabs">
               <li className="nav-item"><button className={resultStyle} onClick={() => setTab(0)}>Result</button></li>

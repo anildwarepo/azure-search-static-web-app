@@ -17,7 +17,7 @@ namespace WebSearch.Function
     {
         private static string searchApiKey = Environment.GetEnvironmentVariable("SearchApiKey", EnvironmentVariableTarget.Process);
         private static string searchServiceName = Environment.GetEnvironmentVariable("SearchServiceName", EnvironmentVariableTarget.Process);
-        private static string searchIndexName = Environment.GetEnvironmentVariable("SearchIndexName", EnvironmentVariableTarget.Process) ?? "good-books";
+        private static string searchIndexName = Environment.GetEnvironmentVariable("SearchIndexName", EnvironmentVariableTarget.Process) ?? "aml_index_with_suggester";
 
         private readonly ILogger<Lookup> _logger;
 
@@ -43,16 +43,29 @@ namespace WebSearch.Function
                 new AzureKeyCredential(searchApiKey)
             );
 
+            SemanticSearchOptions semanticSearchOptions = new()
+            {
+
+                SemanticConfigurationName = "aml-semantic-config"
+            };
+
             SearchOptions options = new()
 
             {
                 Size = data.Size,
                 Skip = data.Skip,
                 IncludeTotalCount = true,
+                QuerySpeller = QuerySpellerType.Lexicon,
+                QueryLanguage = QueryLanguage.EnUs,
+                QueryType = SearchQueryType.Semantic,
+                SemanticSearch = semanticSearchOptions,
                 Filter = CreateFilterExpression(data.Filters)
+
             };
-            options.Facets.Add("authors");
-            options.Facets.Add("language_code");
+            
+            
+            options.Facets.Add("category");
+            options.Facets.Add("tags");
 
             SearchResults<SearchDocument> searchResults = searchClient.Search<SearchDocument>(data.SearchText, options);
 
@@ -93,21 +106,21 @@ namespace WebSearch.Function
             List<string> filterExpressions = new();
 
 
-            List<SearchFilter> authorFilters = filters.Where(f => f.field == "authors").ToList();
-            List<SearchFilter> languageFilters = filters.Where(f => f.field == "language_code").ToList();
+            List<SearchFilter> categoryFilters = filters.Where(f => f.field == "category").ToList();
+            List<SearchFilter> tagsFilters = filters.Where(f => f.field == "tags").ToList();
 
-            List<string> authorFilterValues = authorFilters.Select(f => f.value).ToList();
+            List<string> categoryFilterValues = categoryFilters.Select(f => f.value).ToList();
 
-            if (authorFilterValues.Count > 0)
+            if (categoryFilterValues.Count > 0)
             {
-                string filterStr = string.Join(",", authorFilterValues);
-                filterExpressions.Add($"{"authors"}/any(t: search.in(t, '{filterStr}', ','))");
+                string filterStr = string.Join(",", categoryFilterValues);
+                filterExpressions.Add($"{"category"}/any(t: search.in(t, '{filterStr}', ','))");
             }
 
-            List<string> languageFilterValues = languageFilters.Select(f => f.value).ToList();
-            foreach (var value in languageFilterValues)
+            List<string> tagsFilterValues = tagsFilters.Select(f => f.value).ToList();
+            foreach (var value in tagsFilterValues)
             {
-                filterExpressions.Add($"language_code eq '{value}'");
+                filterExpressions.Add($"tags eq '{value}'");
             }
 
             return string.Join(" and ", filterExpressions);

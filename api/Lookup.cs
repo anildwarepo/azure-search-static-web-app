@@ -15,7 +15,7 @@ namespace WebSearch.Function
     {
         private static string searchApiKey = Environment.GetEnvironmentVariable("SearchApiKey", EnvironmentVariableTarget.Process);
         private static string searchServiceName = Environment.GetEnvironmentVariable("SearchServiceName", EnvironmentVariableTarget.Process);
-        private static string searchIndexName = Environment.GetEnvironmentVariable("SearchIndexName", EnvironmentVariableTarget.Process) ?? "good-books";
+        private static string searchIndexName = Environment.GetEnvironmentVariable("SearchIndexName", EnvironmentVariableTarget.Process) ?? "aml_index_with_suggester";
 
         private readonly ILogger<Lookup> _logger;
 
@@ -54,7 +54,7 @@ namespace WebSearch.Function
             };
 
             var response = req.CreateResponse(HttpStatusCode.Found);
-            response.Headers.Add("Content-Type", "application/json; charset=utf-8");
+            //response.Headers.Add("Content-Type", "application/json; charset=utf-8");
 
             // Serialize data
             var serializer = new JsonObjectSerializer(

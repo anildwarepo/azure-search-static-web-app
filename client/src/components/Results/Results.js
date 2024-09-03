@@ -1,6 +1,5 @@
 import React from 'react';
 import Result from './Result/Result';
-
 import "./Results.css";
 
 export default function Results(props) {
@@ -18,7 +17,7 @@ export default function Results(props) {
   return (
     <div>
       <p className="results-info">Showing {beginDocNumber}-{endDocNumber} of {props.count.toLocaleString()} results</p>
-      <div className="row row-cols-md-5 results">
+      <div className="results-container">
         {results}
       </div>
     </div>

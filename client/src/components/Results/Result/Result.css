@@ -1,7 +1,7 @@
 .result {
     width: 250px;
     padding: 16px;
-    text-align: center;
+    text-align: left;
     border: 1px solid #eee;
     box-shadow: 0 2px 3px #ccc;
     margin: 10px;
@@ -17,7 +17,7 @@
 }
 
 .title-style {
-    vertical-align: middle;
+    vertical-align: left;
 }
 
 .card-img-top {
@@ -27,4 +27,47 @@
     height: auto;
     max-height: 12em;
     vertical-align: middle;
+}
+
+.result-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.result-item {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    display: block; /* Ensure items are block-level elements */
+    width: 100%; /* Make sure each item takes full width */
+}
+
+
+.result-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.result-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.result-summary {
+    display: block;
+}
+
+.result-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.result-content {
+    font-size: 0.9rem;
+    color: #555;
 }

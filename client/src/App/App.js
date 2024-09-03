@@ -19,8 +19,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // Custom app styles
 import './App.css';
 
+import useAppInsights from '../components/Telemetry/telemetry';
+
 export default function App() {
   // React Hook: useState with a var name, set function, & default value
+  useAppInsights();
   const [user, setUser] = useState({});
 
   // Fetch authentication API & set user state
